@@ -1,0 +1,179 @@
+@import 'tailwindcss';
+@plugin "tailwindcss-animate";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --radius: 0.875rem;
+
+  /* QuestNU palette — emerald brand. Tones tuned for soft, eye-soothing UI. */
+  --brand: 160 70% 38%; /* primary emerald */
+  --brand-hover: 160 72% 33%;
+  --brand-soft: 152 60% 95%; /* tint surface */
+  --brand-ring: 160 70% 42%;
+  --brand-shadow: 160 50% 32%;
+
+  --background: 150 30% 98%;
+  --foreground: 158 36% 10%;
+  --card: 0 0% 100%;
+  --card-foreground: 158 36% 10%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 158 36% 10%;
+  --primary: 160 70% 38%;
+  --primary-foreground: 150 100% 98%;
+  --secondary: 152 35% 95%;
+  --secondary-foreground: 160 45% 18%;
+  --muted: 150 30% 96%;
+  --muted-foreground: 158 14% 42%;
+  --accent: 152 60% 95%;
+  --accent-foreground: 160 45% 18%;
+  --destructive: 0 75% 55%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 152 20% 90%;
+  --input: 152 20% 90%;
+  --ring: 160 70% 42%;
+  --chart-1: 160 70% 40%;
+  --chart-2: 175 55% 42%;
+  --chart-3: 35 90% 60%;
+  --chart-4: 200 75% 50%;
+  --chart-5: 12 75% 60%;
+  --sidebar: 0 0% 100%;
+  --sidebar-foreground: 158 36% 14%;
+  --sidebar-border: 150 22% 92%;
+}
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 6px);
+  --radius-md: calc(var(--radius) - 4px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-chart-1: hsl(var(--chart-1));
+  --color-chart-2: hsl(var(--chart-2));
+  --color-chart-3: hsl(var(--chart-3));
+  --color-chart-4: hsl(var(--chart-4));
+  --color-chart-5: hsl(var(--chart-5));
+  --color-sidebar: hsl(var(--sidebar));
+  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
+  --color-sidebar-border: hsl(var(--sidebar-border));
+  --color-brand: hsl(var(--brand));
+  --color-brand-hover: hsl(var(--brand-hover));
+  --color-brand-soft: hsl(var(--brand-soft));
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html,
+  body {
+    @apply h-full;
+  }
+
+  /* Tailwind preflight sets buttons to the default cursor. Restore a pointer
+     on anything the user can activate. */
+  button:not(:disabled),
+  [role='button']:not([aria-disabled='true']),
+  [role='tab']:not([data-disabled]),
+  [role='menuitem']:not([data-disabled]),
+  [role='option']:not([data-disabled]),
+  a[href],
+  summary,
+  select:not(:disabled),
+  label[for],
+  input[type='checkbox']:not(:disabled),
+  input[type='radio']:not(:disabled),
+  input[type='file']:not(:disabled)::file-selector-button {
+    cursor: pointer;
+  }
+
+  :disabled,
+  [aria-disabled='true'] {
+    cursor: not-allowed;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family:
+      'Inter',
+      system-ui,
+      -apple-system,
+      'Segoe UI',
+      Roboto,
+      Helvetica,
+      Arial,
+      sans-serif;
+    background-image:
+      radial-gradient(
+        1100px 540px at -10% -20%,
+        hsl(var(--brand) / 0.08) 0%,
+        transparent 60%
+      ),
+      radial-gradient(
+        900px 480px at 110% 10%,
+        hsl(var(--brand) / 0.06) 0%,
+        transparent 55%
+      );
+    background-attachment: fixed;
+  }
+
+  /* Slim, on-brand scrollbar */
+  *::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+  *::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--brand) / 0.45);
+    background-clip: padding-box;
+    border: 2px solid transparent;
+  }
+}
+
+@layer utilities {
+  .bg-brand-gradient {
+    background-image: linear-gradient(
+      135deg,
+      hsl(160 65% 32%) 0%,
+      hsl(155 60% 42%) 55%,
+      hsl(150 60% 50%) 100%
+    );
+  }
+  .bg-brand-gradient:hover {
+    background-image: linear-gradient(
+      135deg,
+      hsl(160 65% 29%) 0%,
+      hsl(155 60% 38%) 55%,
+      hsl(150 60% 46%) 100%
+    );
+  }
+  .shadow-brand {
+    box-shadow:
+      0 1px 2px hsl(var(--brand-shadow) / 0.08),
+      0 12px 30px -12px hsl(var(--brand-shadow) / 0.25);
+  }
+}

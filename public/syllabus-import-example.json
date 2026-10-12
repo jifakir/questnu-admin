@@ -1,0 +1,68 @@
+[
+  {
+    "id": "example-department-101",
+    "departmentId": "history",
+    "yearId": "1",
+    "code": "101",
+    "title": "Example theoretical paper",
+    "titleBn": "উদাহরণ তত্ত্বীয় পত্র",
+    "marks": 100,
+    "credits": 4,
+    "classHours": 60,
+    "examDuration": null,
+    "orientation": "Theoretical",
+    "description": null,
+    "objectives": [
+      "If description is empty, this first objective is saved as Introduction.",
+      "Later objectives stay in the objectives list."
+    ],
+    "outcomes": [
+      {
+        "id": "CLO 1",
+        "text": "Recall the example facts from this paper.",
+        "mappedPlos": ["PLO 1"]
+      }
+    ],
+    "prescribedTexts": [],
+    "outline": [
+      {
+        "unit": "1",
+        "topic": "Write the unit topic here.",
+        "hours": null,
+        "teachingStrategies": ["Interactive lectures"],
+        "clos": ["CLO 1"]
+      }
+    ],
+    "books": [
+      "Author, A. (2024). Example Book Title. Publisher."
+    ]
+  },
+  {
+    "id": "example-department-102",
+    "departmentId": "history",
+    "yearId": "1",
+    "code": "102",
+    "title": "Example practical paper",
+    "titleBn": null,
+    "marks": 50,
+    "credits": 2,
+    "classHours": 30,
+    "examDuration": null,
+    "orientation": "Practical",
+    "description": null,
+    "objectives": [],
+    "outcomes": [],
+    "prescribedTexts": [],
+    "outline": [],
+    "books": [],
+    "labDetails": {
+      "instructions": [
+        "1. Practical instructions are shown as Introduction when description and objectives are empty."
+      ],
+      "exam": {
+        "format": "Optional exam distribution note.",
+        "total": 50
+      }
+    }
+  }
+]
