@@ -7,6 +7,7 @@ import {
   FileQuestion,
   FileText,
   GraduationCap,
+  Handshake,
   Home,
   Keyboard,
   LineChart,
@@ -168,6 +169,14 @@ export function CommandPalette({
                   onSelect={() => go('/blog/authors')}
                 >
                   <Users className="size-4 text-muted-foreground" /> Blog authors
+                </CommandItem>
+              ) : null}
+              {isAdmin ? (
+                <CommandItem
+                  value="ellc profile partner english department"
+                  onSelect={() => go('/blog/ellc')}
+                >
+                  <Handshake className="size-4 text-muted-foreground" /> ELLC profile
                 </CommandItem>
               ) : null}
               {isAdmin ? (

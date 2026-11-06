@@ -36,6 +36,8 @@ import type {
   BlogPostWritePayload,
   BlogAuthor,
   BlogAuthorWritePayload,
+  EllcProfile,
+  EllcWritePayload,
 } from './types'
 
 const TOKEN_KEY = 'exam_admin_token'
@@ -728,6 +730,19 @@ export async function updateBlogAuthor(
 
 export async function deleteBlogAuthor(id: string): Promise<void> {
   await request(`/admin/blog/authors/${id}`, { method: 'DELETE' })
+}
+
+export async function fetchEllcProfile(): Promise<EllcProfile> {
+  return request<EllcProfile>('/admin/blog/ellc')
+}
+
+export async function updateEllcProfile(
+  body: Partial<EllcWritePayload>,
+): Promise<EllcProfile> {
+  return request<EllcProfile>('/admin/blog/ellc', {
+    method: 'PATCH',
+    body: JSON.stringify(body),
+  })
 }
 
 export async function uploadBlogImage(

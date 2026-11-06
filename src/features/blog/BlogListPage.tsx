@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import {
   EyeOff,
+  Handshake,
   Loader2,
   Newspaper,
   Pencil,
@@ -290,6 +291,12 @@ export function BlogListPage() {
               <Link to="/blog/authors">
                 <Users className="size-4" />
                 Authors
+              </Link>
+            </Button>
+            <Button asChild variant="outline" className="rounded-xl">
+              <Link to="/blog/ellc">
+                <Handshake className="size-4" />
+                ELLC
               </Link>
             </Button>
             {newButton}

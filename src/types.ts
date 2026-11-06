@@ -548,6 +548,8 @@ export type BlogAuthor = {
   bio: string | null
   /** File name from the blog image upload endpoint. */
   avatar: string | null
+  /** Writes for ELLC (posts get the ELLC badge and card); false = QuestNU's own writer. */
+  ellc: boolean
   postCount: number
   createdAt: string | null
   updatedAt: string | null
@@ -558,4 +560,43 @@ export type BlogAuthorWritePayload = {
   designation?: string
   bio?: string
   avatar?: string | null
+  ellc?: boolean
+}
+
+export type EllcFaq = { question: string; answer: string }
+
+/** QuestNU's only partner: ELLC (NU English Department courses). */
+export type EllcProfile = {
+  slug: 'ellc'
+  name: string
+  /** One-liner shown on the ELLC badge and card. */
+  tagline: string
+  /** Plain text; blank lines become paragraphs on the site. */
+  description: string
+  subjects: string[]
+  faqs: EllcFaq[]
+  /** File name from the blog image upload endpoint. */
+  logo: string | null
+  facebookPageUrl: string | null
+  facebookGroupUrl: string | null
+  youtubeUrl: string | null
+  websiteUrl: string | null
+  showOnHomepage: boolean
+  writerCount: number
+  updatedAt: string | null
+}
+
+/** PATCH body (send any subset). '' clears a link, logo null clears the logo. */
+export type EllcWritePayload = {
+  name: string
+  tagline: string
+  description: string
+  subjects: string[]
+  faqs: EllcFaq[]
+  logo: string | null
+  facebookPageUrl: string
+  facebookGroupUrl: string
+  youtubeUrl: string
+  websiteUrl: string
+  showOnHomepage: boolean
 }

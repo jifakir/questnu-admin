@@ -122,6 +122,7 @@ const BREADCRUMBS: Record<string, string> = {
   notifications: 'Notifications',
   blog: 'Blog',
   authors: 'Authors',
+  ellc: 'ELLC',
   profile: 'Profile',
   new: 'New',
   edit: 'Edit',
@@ -140,7 +141,7 @@ const LIST_SEARCH_ROUTES: Record<
   '/academics/syllabus': { placeholder: 'Search courses by code, title, or slug…' },
   '/academics/question-bank': { placeholder: 'Search questions by prompt or course…' },
   '/blog': { placeholder: 'Search posts by title or slug…' },
-  '/blog/authors': { placeholder: 'Search authors by name or designation…' },
+  '/blog/authors': { placeholder: 'Search authors by name, designation, or ELLC…' },
 }
 
 function getSearchConfig(path: string): {

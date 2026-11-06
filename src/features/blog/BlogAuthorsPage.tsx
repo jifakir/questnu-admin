@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { ArrowLeft, Loader2, Pencil, PlusCircle, Trash2, Users } from 'lucide-react'
+import { ArrowLeft, Handshake, Loader2, Pencil, PlusCircle, Trash2, Users } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { toast } from 'sonner'
 
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import {
@@ -67,7 +68,7 @@ export function BlogAuthorsPage() {
     const q = query.trim().toLowerCase()
     if (!q) return authors
     return authors.filter((a) =>
-      [a.name, a.designation].some((v) =>
+      [a.name, a.designation, a.ellc ? 'ELLC' : null].some((v) =>
         (v ?? '').toLowerCase().includes(q),
       ),
     )
@@ -243,7 +244,15 @@ function AuthorCard({
           </span>
         )}
         <div className="min-w-0 flex-1">
-          <p className="line-clamp-1 font-semibold">{a.name}</p>
+          <div className="flex flex-wrap items-center gap-1.5">
+            <p className="line-clamp-1 font-semibold">{a.name}</p>
+            {a.ellc ? (
+              <Badge variant="processing" className="gap-1 px-1.5 py-0 text-[10px]">
+                <Handshake className="size-3" />
+                ELLC
+              </Badge>
+            ) : null}
+          </div>
           {a.designation ? (
             <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{a.designation}</p>
           ) : null}

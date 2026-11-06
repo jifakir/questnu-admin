@@ -114,18 +114,54 @@ export const AUTHOR_LIMITS = {
   bio: 600,
 } as const
 
-/** Label used in pickers: name, with the designation when there is one. */
-export function authorLabel(a: Pick<BlogAuthor, 'name' | 'designation'>): string {
-  return a.designation ? `${a.name} — ${a.designation}` : a.name
+/**
+ * Label used in pickers: name, with the designation when there is one, and
+ * " · ELLC" for ELLC writers (e.g. "Maliha Hasan — English Instructor · ELLC").
+ */
+export function authorLabel(a: Pick<BlogAuthor, 'name' | 'designation'> & { ellc?: boolean }): string {
+  const base = a.designation ? `${a.name} — ${a.designation}` : a.name
+  return a.ellc ? `${base} · ELLC` : base
 }
 
 /** One or two letters for an avatar placeholder. */
 export function authorInitials(a: Pick<BlogAuthor, 'name'>): string {
-  const source = a.name.trim()
+  // Ignore punctuation so "ELLC (Dhaka)" gives "ED", not "E(".
+  const source = a.name.replace(/[^\p{L}\p{N}\s]/gu, ' ').trim()
   const words = source.split(/\s+/).filter(Boolean)
   const first = (w: string | undefined) => (w ? Array.from(w)[0] ?? '' : '')
   const out = words.length > 1 ? first(words[0]) + first(words[words.length - 1]) : first(words[0])
   return out.toUpperCase() || '?'
+}
+
+// --- ELLC --------------------------------------------------------------------
+
+export const ELLC_LIMITS = {
+  name: 80,
+  tagline: 160,
+  description: 3000,
+  subjects: 60,
+  subject: 120,
+  faqs: 20,
+  question: 200,
+  answer: 1500,
+  url: 300,
+} as const
+
+/** One subject per line; blanks and case-insensitive duplicates dropped. */
+export function splitLines(raw: string): string[] {
+  const seen = new Set<string>()
+  const out: string[] = []
+  for (const line of raw.split(/\r?\n/)) {
+    const v = line.trim()
+    if (!v || seen.has(v.toLowerCase())) continue
+    seen.add(v.toLowerCase())
+    out.push(v)
+  }
+  return out
+}
+
+export function isHttpUrl(v: string): boolean {
+  return /^https?:\/\/\S+$/i.test(v)
 }
 
 // --- Sidebar table of contents -------------------------------------------------

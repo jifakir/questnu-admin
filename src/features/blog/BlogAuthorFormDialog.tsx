@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button'
 import { DialogDescription, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
 import { blogImageUrl, uploadBlogImage } from '@/api'
 import type { BlogAuthor, BlogAuthorWritePayload } from '@/types'
@@ -23,9 +24,11 @@ type FormState = {
   designation: string
   bio: string
   avatar: string | null
+  /** Writes for ELLC (QuestNU's partner); false = QuestNU's own writer. */
+  ellc: boolean
 }
 
-type TextKey = Exclude<keyof FormState, 'avatar'>
+type TextKey = Exclude<keyof FormState, 'avatar' | 'ellc'>
 
 function buildInitial(a?: BlogAuthor | null): FormState {
   return {
@@ -33,6 +36,7 @@ function buildInitial(a?: BlogAuthor | null): FormState {
     designation: a?.designation ?? '',
     bio: a?.bio ?? '',
     avatar: a?.avatar ?? null,
+    ellc: a?.ellc ?? false,
   }
 }
 
@@ -62,6 +66,7 @@ function toPayload(s: FormState, isEdit: boolean): BlogAuthorWritePayload {
     if (v || isEdit) payload[key] = v
   }
   if (s.avatar || isEdit) payload.avatar = s.avatar
+  payload.ellc = s.ellc
   return payload
 }
 
@@ -218,6 +223,22 @@ export function BlogAuthorFormDialog({
                 onChange={(v) => update('designation', v)}
                 placeholder="e.g. Lecturer, Dept. of English"
               />
+            </div>
+            <div className="flex items-start gap-3 rounded-xl border border-border/70 bg-muted/30 p-3">
+              <Switch
+                id="author-ellc"
+                checked={state.ellc}
+                onCheckedChange={(v) => setState((s) => ({ ...s, ellc: v }))}
+                aria-label="Writes for ELLC"
+              />
+              <div>
+                <Label htmlFor="author-ellc" className="text-sm font-semibold">
+                  Writes for ELLC
+                </Label>
+                <p className="text-xs text-muted-foreground">
+                  Their posts get the ELLC badge and ELLC card
+                </p>
+              </div>
             </div>
             <BioField
               id="author-bio"

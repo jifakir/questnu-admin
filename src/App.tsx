@@ -14,6 +14,7 @@ import { SyllabusListPage } from '@/features/academics/SyllabusListPage'
 import { BlogAuthorsPage } from '@/features/blog/BlogAuthorsPage'
 import { BlogEditorPage } from '@/features/blog/BlogEditorPage'
 import { BlogListPage } from '@/features/blog/BlogListPage'
+import { BlogEllcPage } from '@/features/blog/BlogEllcPage'
 import { CourseDetailPage } from '@/features/courses/CourseDetailPage'
 import { CoursesListPage } from '@/features/courses/CoursesListPage'
 import { DashboardPage } from '@/pages/DashboardPage'
@@ -256,6 +257,16 @@ export default function App() {
               <RequireAdmin>
                 <RouteBoundary>
                   <BlogAuthorsPage />
+                </RouteBoundary>
+              </RequireAdmin>
+            }
+          />
+          <Route
+            path="/blog/ellc"
+            element={
+              <RequireAdmin>
+                <RouteBoundary>
+                  <BlogEllcPage />
                 </RouteBoundary>
               </RequireAdmin>
             }
