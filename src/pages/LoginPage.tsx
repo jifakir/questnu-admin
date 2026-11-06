@@ -64,11 +64,11 @@ export function LoginPage() {
       <div className="relative flex h-full flex-col px-5 py-6 sm:px-10 lg:px-14">
         <header className="flex items-center justify-between">
           <div className="flex items-center gap-3 lg:hidden">
-            <span className="bg-brand-gradient shadow-brand flex size-9 items-center justify-center rounded-xl ring-1 ring-white/30">
+            <span className="bg-brand-gradient shadow-brand flex size-9 items-center justify-center overflow-hidden rounded-xl ring-1 ring-white/30">
               <img
-                src="/brand/logo.png"
+                src="/brand/shortlogo-256.png"
                 alt="QuestNU"
-                className="size-6 object-contain drop-shadow-sm"
+                className="size-full scale-[1.3] object-cover"
               />
             </span>
             <p className="text-base font-bold tracking-tight">
@@ -238,11 +238,11 @@ function BrandPanel() {
 
       <div className="relative z-10 flex h-full flex-col justify-between p-10 xl:p-14">
         <div className="flex items-center gap-3">
-          <span className="flex size-11 items-center justify-center rounded-2xl bg-white/15 shadow-lg ring-1 ring-white/30 backdrop-blur">
+          <span className="flex size-11 items-center justify-center overflow-hidden rounded-2xl bg-white/15 shadow-lg ring-1 ring-white/30 backdrop-blur">
             <img
-              src="/brand/logo.png"
+              src="/brand/shortlogo-256.png"
               alt="QuestNU"
-              className="size-7 object-contain"
+              className="size-full scale-[1.3] object-cover"
             />
           </span>
           <div className="leading-tight">

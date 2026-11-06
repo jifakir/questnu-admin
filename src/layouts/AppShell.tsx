@@ -485,9 +485,9 @@ function Sidebar({
         >
           <span className="relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-brand-gradient shadow-brand ring-1 ring-white/30">
             <img
-              src="/brand/logo.png"
+              src="/brand/shortlogo-256.png"
               alt="QuestNU"
-              className="size-7 object-contain drop-shadow-sm"
+              className="size-full scale-[1.3] object-cover"
             />
           </span>
           {!collapsed ? (
