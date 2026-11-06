@@ -11,6 +11,7 @@ import { SyllabusDetailPage } from '@/features/academics/SyllabusDetailPage'
 import { CourseUploadPage } from '@/features/academics/CourseUploadPage'
 import { AcademicCourseDetailPage } from '@/features/academics/AcademicCourseDetailPage'
 import { SyllabusListPage } from '@/features/academics/SyllabusListPage'
+import { BlogAuthorsPage } from '@/features/blog/BlogAuthorsPage'
 import { BlogEditorPage } from '@/features/blog/BlogEditorPage'
 import { BlogListPage } from '@/features/blog/BlogListPage'
 import { CourseDetailPage } from '@/features/courses/CourseDetailPage'
@@ -245,6 +246,16 @@ export default function App() {
               <RequireAdmin>
                 <RouteBoundary>
                   <BlogEditorPage />
+                </RouteBoundary>
+              </RequireAdmin>
+            }
+          />
+          <Route
+            path="/blog/authors"
+            element={
+              <RequireAdmin>
+                <RouteBoundary>
+                  <BlogAuthorsPage />
                 </RouteBoundary>
               </RequireAdmin>
             }

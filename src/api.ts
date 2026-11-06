@@ -28,10 +28,14 @@ import type {
   CourseUploadResult,
   SubjectImportResult,
   AppCatalogSyncResult,
+  AdminNotificationPage,
+  AdminNotificationQuery,
   AppNotification,
   NotificationWritePayload,
   AdminBlogPost,
   BlogPostWritePayload,
+  BlogAuthor,
+  BlogAuthorWritePayload,
 } from './types'
 
 const TOKEN_KEY = 'exam_admin_token'
@@ -616,8 +620,16 @@ export async function deleteAcademicQuestion(slug: string): Promise<void> {
 
 // --- Push notifications ----------------------------------------------------
 
-export async function fetchAdminNotifications(): Promise<AppNotification[]> {
-  return request<AppNotification[]>('/admin/notifications')
+/** One page of notifications, drafts included, newest first. */
+export async function fetchAdminNotifications(
+  query: AdminNotificationQuery = {},
+): Promise<AdminNotificationPage> {
+  const params = new URLSearchParams()
+  for (const [key, value] of Object.entries(query)) {
+    if (value !== undefined && value !== '') params.set(key, String(value))
+  }
+  const qs = params.toString()
+  return request<AdminNotificationPage>(`/admin/notifications${qs ? `?${qs}` : ''}`)
 }
 
 export async function createAdminNotification(
@@ -625,6 +637,17 @@ export async function createAdminNotification(
 ): Promise<AppNotification> {
   return request<AppNotification>('/admin/notifications', {
     method: 'POST',
+    body: JSON.stringify(body),
+  })
+}
+
+/** Saves edits. A published notification is marked edited and its push is resent. */
+export async function updateAdminNotification(
+  id: string,
+  body: NotificationWritePayload,
+): Promise<AppNotification> {
+  return request<AppNotification>(`/admin/notifications/${id}`, {
+    method: 'PATCH',
     body: JSON.stringify(body),
   })
 }
@@ -678,6 +701,33 @@ export async function unpublishAdminBlogPost(id: string): Promise<AdminBlogPost>
 
 export async function deleteAdminBlogPost(id: string): Promise<void> {
   await request(`/admin/blog/posts/${id}`, { method: 'DELETE' })
+}
+
+export async function fetchBlogAuthors(): Promise<BlogAuthor[]> {
+  return request<BlogAuthor[]>('/admin/blog/authors')
+}
+
+export async function createBlogAuthor(
+  body: BlogAuthorWritePayload,
+): Promise<BlogAuthor> {
+  return request<BlogAuthor>('/admin/blog/authors', {
+    method: 'POST',
+    body: JSON.stringify(body),
+  })
+}
+
+export async function updateBlogAuthor(
+  id: string,
+  body: Partial<BlogAuthorWritePayload>,
+): Promise<BlogAuthor> {
+  return request<BlogAuthor>(`/admin/blog/authors/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(body),
+  })
+}
+
+export async function deleteBlogAuthor(id: string): Promise<void> {
+  await request(`/admin/blog/authors/${id}`, { method: 'DELETE' })
 }
 
 export async function uploadBlogImage(

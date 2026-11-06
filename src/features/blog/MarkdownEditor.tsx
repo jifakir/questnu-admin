@@ -50,11 +50,13 @@ function insertAt(v: string, s: number, e: number, text: string): Edit {
 
 const TOOLS: {
   label: string
+  /** Tooltip; defaults to the label. */
+  hint?: string
   icon: typeof Bold
   fn: (v: string, s: number, e: number) => Edit
 }[] = [
-  { label: 'Heading 2', icon: Heading2, fn: (v, s, e) => prefixLines(v, s, e, () => '## ') },
-  { label: 'Heading 3', icon: Heading3, fn: (v, s, e) => prefixLines(v, s, e, () => '### ') },
+  { label: 'Heading 2', hint: 'H2 — section heading (shows in sidebar)', icon: Heading2, fn: (v, s, e) => prefixLines(v, s, e, () => '## ') },
+  { label: 'Heading 3', hint: 'H3 — sub-heading (not shown in sidebar)', icon: Heading3, fn: (v, s, e) => prefixLines(v, s, e, () => '### ') },
   { label: 'Bold', icon: Bold, fn: (v, s, e) => wrap(v, s, e, '**', '**', 'bold text') },
   { label: 'Italic', icon: Italic, fn: (v, s, e) => wrap(v, s, e, '_', '_', 'italic text') },
   { label: 'Link', icon: Link2, fn: (v, s, e) => wrap(v, s, e, '[', '](https://)', 'link text') },
@@ -133,7 +135,7 @@ export function MarkdownEditor({
             size="icon"
             variant="ghost"
             className="size-8 rounded-lg"
-            title={t.label}
+            title={t.hint ?? t.label}
             aria-label={t.label}
             onClick={() => apply(t.fn)}
           >

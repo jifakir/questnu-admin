@@ -163,6 +163,14 @@ export function CommandPalette({
                 </CommandItem>
               ) : null}
               {isAdmin ? (
+                <CommandItem
+                  value="blog authors writers profiles"
+                  onSelect={() => go('/blog/authors')}
+                >
+                  <Users className="size-4 text-muted-foreground" /> Blog authors
+                </CommandItem>
+              ) : null}
+              {isAdmin ? (
                 <CommandItem value="settings" onSelect={() => go('/settings')}>
                   <Settings className="size-4 text-muted-foreground" /> Settings
                 </CommandItem>

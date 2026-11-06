@@ -1,4 +1,4 @@
-import type { BlogLocaleContent } from '@/types'
+import type { BlogAuthor, BlogLocaleContent } from '@/types'
 
 export const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 
@@ -104,4 +104,75 @@ export function validateLocale(f: LocaleForm, label: string): string | null {
     return `${label}: each keyword must be ${LIMITS.keyword} characters or fewer`
   if (!c.body.trim()) return `${label}: body is required`
   return null
+}
+
+// --- Authors -----------------------------------------------------------------
+
+export const AUTHOR_LIMITS = {
+  name: 100,
+  designation: 120,
+  bio: 600,
+} as const
+
+/** Label used in pickers: name, with the designation when there is one. */
+export function authorLabel(a: Pick<BlogAuthor, 'name' | 'designation'>): string {
+  return a.designation ? `${a.name} — ${a.designation}` : a.name
+}
+
+/** One or two letters for an avatar placeholder. */
+export function authorInitials(a: Pick<BlogAuthor, 'name'>): string {
+  const source = a.name.trim()
+  const words = source.split(/\s+/).filter(Boolean)
+  const first = (w: string | undefined) => (w ? Array.from(w)[0] ?? '' : '')
+  const out = words.length > 1 ? first(words[0]) + first(words[words.length - 1]) : first(words[0])
+  return out.toUpperCase() || '?'
+}
+
+// --- Sidebar table of contents -------------------------------------------------
+
+export type MarkdownHeading = { level: number; text: string }
+
+/** Reduces inline Markdown to plain text (links, images, emphasis, code). */
+export function stripInlineMarkdown(s: string): string {
+  return s
+    .replace(/!\[([^\]]*)\]\([^)]*\)/g, '$1')
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+    .replace(/`([^`]*)`/g, '$1')
+    .replace(/(\*\*|__)(.+?)\1/g, '$2')
+    .replace(/(\*|_)(.+?)\1/g, '$2')
+    .replace(/~~(.+?)~~/g, '$1')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+/** All ATX headings (`#` … `######`) outside fenced code blocks. */
+export function extractHeadings(body: string): MarkdownHeading[] {
+  const out: MarkdownHeading[] = []
+  let fence: string | null = null
+  for (const line of body.split(/\r?\n/)) {
+    const fenceMatch = /^ {0,3}(`{3,}|~{3,})/.exec(line)
+    if (fenceMatch) {
+      const marker = fenceMatch[1]
+      if (fence === null) fence = marker
+      else if (marker[0] === fence[0] && marker.length >= fence.length) fence = null
+      continue
+    }
+    if (fence !== null) continue
+    const m = /^ {0,3}(#{1,6})(?:[ \t]+(.*?))?[ \t]*$/.exec(line)
+    if (!m) continue
+    const raw = (m[2] ?? '').replace(/(?:^|[ \t]+)#+$/, '')
+    const text = stripInlineMarkdown(raw)
+    if (text) out.push({ level: m[1].length, text })
+  }
+  return out
+}
+
+/**
+ * The entries the public site shows in the article's "In this guide" sidebar:
+ * level-2 (`## Heading`) headings only, in order.
+ */
+export function extractSidebarHeadings(body: string): string[] {
+  return extractHeadings(body)
+    .filter((h) => h.level === 2)
+    .map((h) => h.text)
 }

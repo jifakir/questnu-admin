@@ -8,6 +8,7 @@ import {
   Newspaper,
   Save,
   Send,
+  Users,
   X,
 } from 'lucide-react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
@@ -19,6 +20,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { NativeSelect } from '@/components/ui/native-select'
 import { Switch } from '@/components/ui/switch'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Textarea } from '@/components/ui/textarea'
@@ -26,6 +28,7 @@ import {
   blogImageUrl,
   createAdminBlogPost,
   fetchAdminBlogPost,
+  fetchBlogAuthors,
   publishAdminBlogPost,
   unpublishAdminBlogPost,
   updateAdminBlogPost,
@@ -33,12 +36,14 @@ import {
 } from '@/api'
 import { SITE_URL } from '@/config'
 import { formatDateTime } from '@/lib/format'
-import type { AdminBlogPost, BlogPostWritePayload } from '@/types'
+import type { AdminBlogPost, BlogAuthor, BlogPostWritePayload } from '@/types'
 import { MarkdownEditor } from './MarkdownEditor'
+import { SidebarHeadingsHint } from './SidebarHeadingsHint'
 import {
   EMPTY_LOCALE,
   LIMITS,
   SLUG_RE,
+  authorLabel,
   formToLocale,
   localeToForm,
   slugify,
@@ -50,6 +55,8 @@ import {
 type FormState = {
   slug: string
   coverImage: string | null
+  /** null = default "QuestNU Academic Team". */
+  authorId: string | null
   bn: LocaleForm
   enEnabled: boolean
   en: LocaleForm
@@ -58,6 +65,7 @@ type FormState = {
 const EMPTY_FORM: FormState = {
   slug: '',
   coverImage: null,
+  authorId: null,
   bn: { ...EMPTY_LOCALE },
   enEnabled: false,
   en: { ...EMPTY_LOCALE },
@@ -67,6 +75,7 @@ function postToForm(p: AdminBlogPost): FormState {
   return {
     slug: p.slug,
     coverImage: p.coverImage,
+    authorId: p.authorId ?? null,
     bn: localeToForm(p.bn),
     enEnabled: !!p.en,
     en: localeToForm(p.en),
@@ -78,6 +87,7 @@ function snapshot(f: FormState): string {
   return JSON.stringify({
     slug: f.slug.trim(),
     coverImage: f.coverImage,
+    authorId: f.authorId,
     bn: formToLocale(f.bn),
     en: f.enEnabled ? formToLocale(f.en) : null,
   })
@@ -104,6 +114,22 @@ export function BlogEditorPage() {
   const [uploadingCover, setUploadingCover] = useState(false)
   const [tab, setTab] = useState<'bn' | 'en'>('bn')
   const coverInput = useRef<HTMLInputElement>(null)
+  const [authors, setAuthors] = useState<BlogAuthor[] | null>(null)
+  const [authorsError, setAuthorsError] = useState<string | null>(null)
+
+  useEffect(() => {
+    let cancelled = false
+    fetchBlogAuthors()
+      .then((data) => {
+        if (!cancelled) setAuthors(data)
+      })
+      .catch((e: unknown) => {
+        if (!cancelled) setAuthorsError(errMsg(e) || 'Failed to load authors')
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   useEffect(() => {
     if (!id) return
@@ -182,6 +208,7 @@ export function BlogEditorPage() {
       bn: formToLocale(form.bn),
       en: form.enEnabled ? formToLocale(form.en) : null,
       coverImage: form.coverImage,
+      authorId: form.authorId,
     }
     if (slug) payload.slug = slug
     return payload
@@ -378,6 +405,53 @@ export function BlogEditorPage() {
                 {isNew && !slugTouched ? ' Auto-filled from the English title.' : ''}
                 {isPublished ? ' Changing it breaks existing links to this post.' : ''}
               </p>
+            </div>
+            <div>
+              <div className="flex items-baseline justify-between gap-2">
+                <Label htmlFor="blog-author" className={labelCls}>
+                  Author
+                </Label>
+                <Link
+                  to="/blog/authors"
+                  className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-brand"
+                  onClick={(e) => {
+                    if (
+                      dirty &&
+                      !window.confirm('You have unsaved changes. Leave this page and lose them?')
+                    )
+                      e.preventDefault()
+                  }}
+                >
+                  <Users className="size-3.5" />
+                  Manage authors
+                </Link>
+              </div>
+              <NativeSelect
+                id="blog-author"
+                value={form.authorId ?? ''}
+                disabled={!authors && !authorsError}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, authorId: e.target.value || null }))
+                }
+                className="mt-1 h-10 rounded-xl bg-background"
+              >
+                <option value="">QuestNU Academic Team (default)</option>
+                {(authors ?? []).map((a) => (
+                  <option key={a.id} value={a.id}>
+                    {authorLabel(a)}
+                  </option>
+                ))}
+                {form.authorId && !(authors ?? []).some((a) => a.id === form.authorId) ? (
+                  <option value={form.authorId}>
+                    {authors ? 'Unknown author (removed?)' : 'Current author'}
+                  </option>
+                ) : null}
+              </NativeSelect>
+              {authorsError ? (
+                <p className="mt-1 text-xs text-destructive">
+                  Could not load authors: {authorsError}
+                </p>
+              ) : null}
             </div>
             <div className="flex items-start gap-3 rounded-xl border border-border/70 bg-muted/30 p-3">
               <Switch
@@ -595,6 +669,7 @@ function LocaleFields({
               placeholder={lang === 'bn' ? 'এখানে লিখুন… (Markdown supported)' : 'Write your post… (Markdown supported)'}
             />
           </div>
+          <SidebarHeadingsHint body={value.body} title={value.title} />
         </div>
       </CardContent>
     </Card>

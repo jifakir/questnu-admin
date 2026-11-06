@@ -7,6 +7,7 @@ import {
   PlusCircle,
   Send,
   Trash2,
+  Users,
 } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
@@ -26,12 +27,13 @@ import { PageHeader } from '@/components/PageHeader'
 import {
   deleteAdminBlogPost,
   fetchAdminBlogPosts,
+  fetchBlogAuthors,
   publishAdminBlogPost,
   unpublishAdminBlogPost,
 } from '@/api'
 import { formatDateTime, formatRelative } from '@/lib/format'
 import { useSearch } from '@/search'
-import type { AdminBlogPost } from '@/types'
+import type { AdminBlogPost, BlogAuthor } from '@/types'
 
 function errMsg(e: unknown): string {
   return e instanceof Error ? e.message : String(e)
@@ -44,6 +46,7 @@ export function BlogListPage() {
   const [error, setError] = useState<string | null>(null)
   const [removing, setRemoving] = useState<AdminBlogPost | null>(null)
   const [busyId, setBusyId] = useState<string | null>(null)
+  const [authors, setAuthors] = useState<Map<string, BlogAuthor>>(() => new Map())
 
   const reload = useCallback(async () => {
     try {
@@ -63,6 +66,12 @@ export function BlogListPage() {
       .catch((e: unknown) => {
         if (!cancelled) setError(errMsg(e) || 'Failed to load posts')
       })
+    // Author names are a nice-to-have in the table; ignore failures.
+    fetchBlogAuthors()
+      .then((list) => {
+        if (!cancelled) setAuthors(new Map(list.map((a) => [a.id, a])))
+      })
+      .catch(() => {})
     return () => {
       cancelled = true
     }
@@ -146,6 +155,22 @@ export function BlogListPage() {
         cell: (p) => (
           <span className="font-mono text-xs text-muted-foreground">{p.slug}</span>
         ),
+      },
+      {
+        key: 'author',
+        header: 'Author',
+        cell: (p) => {
+          const a = p.authorId ? authors.get(p.authorId) : undefined
+          return a ? (
+            <span className="line-clamp-1 text-sm" lang="bn">
+              {a.name}
+            </span>
+          ) : (
+            <span className="whitespace-nowrap text-xs text-muted-foreground">
+              {p.authorId ? '—' : 'Academic Team'}
+            </span>
+          )
+        },
       },
       {
         key: 'status',
@@ -241,7 +266,7 @@ export function BlogListPage() {
         ),
       },
     ],
-    [busyId, navigate, togglePublish],
+    [authors, busyId, navigate, togglePublish],
   )
 
   const newButton = (
@@ -259,7 +284,17 @@ export function BlogListPage() {
         icon={Newspaper}
         title="Blog"
         description="Write articles for the public website. Bangla is required; add an English version to also show the post on the English site."
-        actions={newButton}
+        actions={
+          <div className="flex flex-wrap items-center gap-2">
+            <Button asChild variant="outline" className="rounded-xl">
+              <Link to="/blog/authors">
+                <Users className="size-4" />
+                Authors
+              </Link>
+            </Button>
+            {newButton}
+          </div>
+        }
       />
 
       {error ? (
