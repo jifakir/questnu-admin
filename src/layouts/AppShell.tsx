@@ -97,7 +97,10 @@ const NAV_ITEMS: {
   {
     group: 'Workspace',
     adminOnly: true,
-    items: [{ to: '/settings', label: 'Settings', icon: Settings }],
+    items: [
+      { to: '/notifications', label: 'Notifications', icon: Bell },
+      { to: '/settings', label: 'Settings', icon: Settings },
+    ],
   },
 ]
 
@@ -114,6 +117,7 @@ const BREADCRUMBS: Record<string, string> = {
   reports: 'Reports',
   activity: 'Activity',
   settings: 'Settings',
+  notifications: 'Notifications',
   profile: 'Profile',
   new: 'New',
   edit: 'Edit',

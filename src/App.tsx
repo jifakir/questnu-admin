@@ -17,6 +17,7 @@ import { DashboardPage } from '@/pages/DashboardPage'
 import { InstructorsPage } from '@/pages/InstructorsPage'
 import { LoginPage } from '@/pages/LoginPage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
+import { NotificationsPage } from '@/pages/NotificationsPage'
 import { PapersPage } from '@/pages/PapersPage'
 import { ReportsPage } from '@/pages/ReportsPage'
 import { ProfilePage } from '@/pages/ProfilePage'
@@ -214,6 +215,16 @@ export default function App() {
               <RouteBoundary>
                 <ProfilePage />
               </RouteBoundary>
+            }
+          />
+          <Route
+            path="/notifications"
+            element={
+              <RequireAdmin>
+                <RouteBoundary>
+                  <NotificationsPage />
+                </RouteBoundary>
+              </RequireAdmin>
             }
           />
           <Route

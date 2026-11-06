@@ -28,6 +28,8 @@ import type {
   CourseUploadResult,
   SubjectImportResult,
   AppCatalogSyncResult,
+  AppNotification,
+  NotificationWritePayload,
 } from './types'
 
 const TOKEN_KEY = 'exam_admin_token'
@@ -608,4 +610,29 @@ export async function createAcademicQuestion(
 
 export async function deleteAcademicQuestion(slug: string): Promise<void> {
   await request(`/academics/questions/${slug}`, { method: 'DELETE' })
+}
+
+// --- Push notifications ----------------------------------------------------
+
+export async function fetchAdminNotifications(): Promise<AppNotification[]> {
+  return request<AppNotification[]>('/admin/notifications')
+}
+
+export async function createAdminNotification(
+  body: NotificationWritePayload & { publish?: boolean },
+): Promise<AppNotification> {
+  return request<AppNotification>('/admin/notifications', {
+    method: 'POST',
+    body: JSON.stringify(body),
+  })
+}
+
+export async function publishAdminNotification(id: string): Promise<AppNotification> {
+  return request<AppNotification>(`/admin/notifications/${id}/publish`, {
+    method: 'POST',
+  })
+}
+
+export async function deleteAdminNotification(id: string): Promise<void> {
+  await request(`/admin/notifications/${id}`, { method: 'DELETE' })
 }

@@ -28,6 +28,7 @@ import type {
   SubjectOutlineUnit,
 } from '@/types'
 import { hasSyllabusBody, OldSyllabusNotice } from './ui'
+import { OutlineUnitCard } from './OutlineUnitCard'
 
 function lines(value: FormDataEntryValue | null) {
   return String(value ?? '')
@@ -228,21 +229,8 @@ export function AcademicCourseDetailPage() {
           {(course.outline ?? []).length === 0 ? (
             <p className="text-sm text-muted-foreground">No units on this course.</p>
           ) : (
-            course.outline?.map((unit) => (
-              <div key={`${unit.unit}-${unit.topic}`} className="flex gap-4 rounded-2xl border border-border/70 bg-card p-4">
-                <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-brand-soft text-sm font-bold text-brand">
-                  {unit.unit}
-                </span>
-                <div>
-                  <p className="text-sm leading-relaxed">{unit.topic}</p>
-                  <div className="mt-2 flex flex-wrap gap-2 text-xs text-muted-foreground">
-                    {unit.hours != null ? <span>{unit.hours} hours</span> : null}
-                    {unit.teachingStrategies?.length ? (
-                      <span>{unit.teachingStrategies.join(' · ')}</span>
-                    ) : null}
-                  </div>
-                </div>
-              </div>
+            course.outline?.map((unit, index) => (
+              <OutlineUnitCard key={`${index}-${unit.unit}`} unit={unit} index={index} />
             ))
           )}
         </TabsContent>

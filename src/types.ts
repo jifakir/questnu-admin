@@ -458,3 +458,23 @@ export interface AppCatalogSyncResult {
     errors?: { slug?: string; message: string }[]
   }
 }
+
+export interface NotificationWritePayload {
+  title: string
+  body: string
+  titleBn?: string
+  bodyBn?: string
+}
+
+export interface AppNotification {
+  id: string
+  title: string
+  body: string
+  titleBn: string | null
+  bodyBn: string | null
+  status: 'draft' | 'published'
+  publishedAt: string | null
+  pushMessageId: string | null
+  pushError: string | null
+  createdAt: string | null
+}
