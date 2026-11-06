@@ -14,6 +14,7 @@ import {
   LayoutDashboard,
   LogOut,
   Menu,
+  Newspaper,
   PanelLeftClose,
   PanelLeftOpen,
   ScrollText,
@@ -99,6 +100,7 @@ const NAV_ITEMS: {
     adminOnly: true,
     items: [
       { to: '/notifications', label: 'Notifications', icon: Bell },
+      { to: '/blog', label: 'Blog', icon: Newspaper },
       { to: '/settings', label: 'Settings', icon: Settings },
     ],
   },
@@ -118,6 +120,7 @@ const BREADCRUMBS: Record<string, string> = {
   activity: 'Activity',
   settings: 'Settings',
   notifications: 'Notifications',
+  blog: 'Blog',
   profile: 'Profile',
   new: 'New',
   edit: 'Edit',
@@ -135,6 +138,7 @@ const LIST_SEARCH_ROUTES: Record<
   '/academics/courses': { placeholder: 'Search courses by code or title…' },
   '/academics/syllabus': { placeholder: 'Search courses by code, title, or slug…' },
   '/academics/question-bank': { placeholder: 'Search questions by prompt or course…' },
+  '/blog': { placeholder: 'Search posts by title or slug…' },
 }
 
 function getSearchConfig(path: string): {

@@ -478,3 +478,37 @@ export interface AppNotification {
   pushError: string | null
   createdAt: string | null
 }
+
+// --- Blog -------------------------------------------------------------------
+
+export type BlogLocaleContent = {
+  title: string
+  excerpt: string
+  /** SEO meta description, <= 300 chars. */
+  description: string
+  category: string
+  keywords: string[]
+  /** Markdown. */
+  body: string
+}
+
+export type AdminBlogPost = {
+  id: string
+  slug: string
+  status: 'draft' | 'published'
+  publishedAt: string | null
+  /** File name from the blog image upload endpoint. */
+  coverImage: string | null
+  bn: BlogLocaleContent
+  en: BlogLocaleContent | null
+  createdAt: string | null
+  updatedAt: string | null
+}
+
+export type BlogPostWritePayload = {
+  slug?: string
+  bn: BlogLocaleContent
+  en?: BlogLocaleContent | null
+  coverImage?: string | null
+  publish?: boolean
+}

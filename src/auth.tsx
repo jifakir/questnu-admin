@@ -40,6 +40,8 @@ export function isAdminOnlyPath(path: string): boolean {
     pathname === '/academics' ||
     pathname.startsWith('/academics/') ||
     pathname === '/notifications' ||
+    pathname === '/blog' ||
+    pathname.startsWith('/blog/') ||
     pathname === '/settings' ||
     pathname.startsWith('/settings/')
   )

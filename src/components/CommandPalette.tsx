@@ -11,6 +11,7 @@ import {
   Keyboard,
   LineChart,
   LogOut,
+  Newspaper,
   Plus,
   Library,
   ScrollText,
@@ -156,6 +157,11 @@ export function CommandPalette({
               <CommandItem value="profile" onSelect={() => go('/profile')}>
                 <UserCog className="size-4 text-muted-foreground" /> Profile
               </CommandItem>
+              {isAdmin ? (
+                <CommandItem value="blog posts articles" onSelect={() => go('/blog')}>
+                  <Newspaper className="size-4 text-muted-foreground" /> Blog
+                </CommandItem>
+              ) : null}
               {isAdmin ? (
                 <CommandItem value="settings" onSelect={() => go('/settings')}>
                   <Settings className="size-4 text-muted-foreground" /> Settings

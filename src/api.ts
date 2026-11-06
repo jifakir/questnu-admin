@@ -30,6 +30,8 @@ import type {
   AppCatalogSyncResult,
   AppNotification,
   NotificationWritePayload,
+  AdminBlogPost,
+  BlogPostWritePayload,
 } from './types'
 
 const TOKEN_KEY = 'exam_admin_token'
@@ -635,4 +637,61 @@ export async function publishAdminNotification(id: string): Promise<AppNotificat
 
 export async function deleteAdminNotification(id: string): Promise<void> {
   await request(`/admin/notifications/${id}`, { method: 'DELETE' })
+}
+
+// --- Blog -------------------------------------------------------------------
+
+export async function fetchAdminBlogPosts(): Promise<AdminBlogPost[]> {
+  return request<AdminBlogPost[]>('/admin/blog/posts')
+}
+
+export async function fetchAdminBlogPost(id: string): Promise<AdminBlogPost> {
+  return request<AdminBlogPost>(`/admin/blog/posts/${id}`)
+}
+
+export async function createAdminBlogPost(
+  body: BlogPostWritePayload,
+): Promise<AdminBlogPost> {
+  return request<AdminBlogPost>('/admin/blog/posts', {
+    method: 'POST',
+    body: JSON.stringify(body),
+  })
+}
+
+export async function updateAdminBlogPost(
+  id: string,
+  body: Partial<BlogPostWritePayload>,
+): Promise<AdminBlogPost> {
+  return request<AdminBlogPost>(`/admin/blog/posts/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(body),
+  })
+}
+
+export async function publishAdminBlogPost(id: string): Promise<AdminBlogPost> {
+  return request<AdminBlogPost>(`/admin/blog/posts/${id}/publish`, { method: 'POST' })
+}
+
+export async function unpublishAdminBlogPost(id: string): Promise<AdminBlogPost> {
+  return request<AdminBlogPost>(`/admin/blog/posts/${id}/unpublish`, { method: 'POST' })
+}
+
+export async function deleteAdminBlogPost(id: string): Promise<void> {
+  await request(`/admin/blog/posts/${id}`, { method: 'DELETE' })
+}
+
+export async function uploadBlogImage(
+  file: File,
+): Promise<{ file: string; path: string }> {
+  const fd = new FormData()
+  fd.append('file', file)
+  return request<{ file: string; path: string }>('/admin/blog/images', {
+    method: 'POST',
+    body: fd,
+  })
+}
+
+/** Public URL of an uploaded blog image (by file name). */
+export function blogImageUrl(file: string): string {
+  return `${API_BASE}/blog/images/${encodeURIComponent(file)}`
 }

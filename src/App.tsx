@@ -11,6 +11,8 @@ import { SyllabusDetailPage } from '@/features/academics/SyllabusDetailPage'
 import { CourseUploadPage } from '@/features/academics/CourseUploadPage'
 import { AcademicCourseDetailPage } from '@/features/academics/AcademicCourseDetailPage'
 import { SyllabusListPage } from '@/features/academics/SyllabusListPage'
+import { BlogEditorPage } from '@/features/blog/BlogEditorPage'
+import { BlogListPage } from '@/features/blog/BlogListPage'
 import { CourseDetailPage } from '@/features/courses/CourseDetailPage'
 import { CoursesListPage } from '@/features/courses/CoursesListPage'
 import { DashboardPage } from '@/pages/DashboardPage'
@@ -223,6 +225,36 @@ export default function App() {
               <RequireAdmin>
                 <RouteBoundary>
                   <NotificationsPage />
+                </RouteBoundary>
+              </RequireAdmin>
+            }
+          />
+          <Route
+            path="/blog"
+            element={
+              <RequireAdmin>
+                <RouteBoundary>
+                  <BlogListPage />
+                </RouteBoundary>
+              </RequireAdmin>
+            }
+          />
+          <Route
+            path="/blog/new"
+            element={
+              <RequireAdmin>
+                <RouteBoundary>
+                  <BlogEditorPage />
+                </RouteBoundary>
+              </RequireAdmin>
+            }
+          />
+          <Route
+            path="/blog/:id/edit"
+            element={
+              <RequireAdmin>
+                <RouteBoundary>
+                  <BlogEditorPage />
                 </RouteBoundary>
               </RequireAdmin>
             }
