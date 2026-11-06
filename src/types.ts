@@ -459,15 +459,11 @@ export interface AppCatalogSyncResult {
   }
 }
 
-/** `general`: QuestNU notices ("Recent Notice"). `nu`: important National University notices ("NU Latest"). */
-export type NotificationCategory = 'general' | 'nu'
-
 export interface NotificationWritePayload {
   title: string
   body: string
   titleBn?: string
   bodyBn?: string
-  category?: NotificationCategory
 }
 
 export interface AppNotification {
@@ -476,31 +472,11 @@ export interface AppNotification {
   body: string
   titleBn: string | null
   bodyBn: string | null
-  category: NotificationCategory
   status: 'draft' | 'published'
   publishedAt: string | null
-  /** Set when a published notification was edited (the push was resent). */
-  editedAt: string | null
   pushMessageId: string | null
   pushError: string | null
   createdAt: string | null
-}
-
-export interface AdminNotificationQuery {
-  page?: number
-  limit?: number
-  status?: AppNotification['status']
-  category?: NotificationCategory
-  /** Matches title or message, English or Bangla. */
-  q?: string
-}
-
-export interface AdminNotificationPage {
-  items: AppNotification[]
-  total: number
-  page: number
-  limit: number
-  pages: number
 }
 
 // --- Blog -------------------------------------------------------------------

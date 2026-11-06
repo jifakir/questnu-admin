@@ -28,8 +28,6 @@ import type {
   CourseUploadResult,
   SubjectImportResult,
   AppCatalogSyncResult,
-  AdminNotificationPage,
-  AdminNotificationQuery,
   AppNotification,
   NotificationWritePayload,
   AdminBlogPost,
@@ -622,16 +620,8 @@ export async function deleteAcademicQuestion(slug: string): Promise<void> {
 
 // --- Push notifications ----------------------------------------------------
 
-/** One page of notifications, drafts included, newest first. */
-export async function fetchAdminNotifications(
-  query: AdminNotificationQuery = {},
-): Promise<AdminNotificationPage> {
-  const params = new URLSearchParams()
-  for (const [key, value] of Object.entries(query)) {
-    if (value !== undefined && value !== '') params.set(key, String(value))
-  }
-  const qs = params.toString()
-  return request<AdminNotificationPage>(`/admin/notifications${qs ? `?${qs}` : ''}`)
+export async function fetchAdminNotifications(): Promise<AppNotification[]> {
+  return request<AppNotification[]>('/admin/notifications')
 }
 
 export async function createAdminNotification(
@@ -639,17 +629,6 @@ export async function createAdminNotification(
 ): Promise<AppNotification> {
   return request<AppNotification>('/admin/notifications', {
     method: 'POST',
-    body: JSON.stringify(body),
-  })
-}
-
-/** Saves edits. A published notification is marked edited and its push is resent. */
-export async function updateAdminNotification(
-  id: string,
-  body: NotificationWritePayload,
-): Promise<AppNotification> {
-  return request<AppNotification>(`/admin/notifications/${id}`, {
-    method: 'PATCH',
     body: JSON.stringify(body),
   })
 }
